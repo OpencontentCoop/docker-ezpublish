@@ -1,0 +1,24 @@
+debug = true
+logLevel = "DEBUG"
+defaultEntryPoints = ["http", "https"]
+
+[web]
+address = ":8080"
+
+[docker]
+domain = "localtest.me"
+watch = true
+
+
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+    [entryPoints.http.redirect]
+    entryPoint = "https"
+  [entryPoints.https]
+  address = ":443"
+    [entryPoints.https.tls]
+      [[entryPoints.https.tls.certificates]]
+      certFile = "/ssl/localtest.me.pem"
+      keyFile = "/ssl/localtest.me.key"
+

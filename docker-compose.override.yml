@@ -1,0 +1,29 @@
+version: "3.7"
+
+services:
+
+  php:
+    build: 
+      context: .
+    volumes:
+      - ./var/prototipo:/var/www/html/var/prototipo
+      - ./dfs:/mnt/efs/cluster-openpa
+      - ./conf.d/ez:/var/www/html/settings
+
+  pgweb:
+    image: sosedoff/pgweb
+    environment:
+      DATABASE_URL: postgres://postgres:verygoodsecret@postgres:5432/ezpublish?sslmode=disable
+    depends_on:
+      - postgres 
+
+  mailhog:
+    image: mailhog/mailhog
+    # must be explicit about what port to proxy from traefik, because the service expose two ports
+    labels:
+      traefik.port: 8025
+
+  solr:
+    environment:
+      VERBOSE: 'yes'
+

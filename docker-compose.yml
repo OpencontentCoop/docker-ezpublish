@@ -1,0 +1,83 @@
+version: '3.7'
+services:
+
+  php:
+    image: opencontent/ezpublish
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - solr
+
+  nginx:
+    image: 'nginx:alpine'
+    restart: unless-stopped
+    labels:
+      traefik.frontend.rule: 'Host:ezpublish.localtest.me'
+    depends_on:
+      - php
+    volumes:
+      - './conf.d/nginx-vhost.conf:/etc/nginx/conf.d/default.conf'
+      - 'html:/var/www/html'
+    #healthcheck:
+    #  test: ["CMD", "curl", "-f", "http://localhost/ezinfo/is_alive"]
+    #  interval: 1m30s
+    #  start_period: 5s
+
+  varnish:
+    image: wodby/varnish
+    restart: unless-stopped
+    depends_on:
+      - nginx
+    environment:
+      VARNISH_BACKEND_GRACE: 10m
+      VARNISH_BACKEND_HOST: nginx
+      VARNISH_CACHE_STATIC_FILES: 1
+      VARNISH_DEFAULT_TTL: 300s
+      VARNISH_ERRORS_GRACE: 60s
+
+  solr:
+    image: 'registry.gitlab.com/opencontent/solr:4.10.4'
+    command: '-s /opt/ez'
+    restart: unless-stopped
+    volumes:
+      - './conf.d/solr:/opt/ez/'
+    # FixMe: must be enabled in config: https://stackoverflow.com/questions/19248746/configure-health-check-in-solr-4
+    #healthcheck:
+    #  test: ["CMD", "curl", "-f", "localhost:7983/solr/prototipo/admin/ping"]
+
+  postgres:
+    image: 'postgres:9.6-alpine'
+    restart: unless-stopped
+    labels:
+      traefik.enable: false
+    environment:
+      POSTGRES_DB: ezpublish
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: verygoodsecret
+    volumes:
+      - './sql:/docker-entrypoint-initdb.d'
+      - 'pgdata:/var/lib/postgresql/data'
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  traefik:
+    image: traefik
+    command: -c /etc/traefik.toml 
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+      - '8080:8080' # Dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./conf.d/certs:/ssl
+      - ./conf.d/traefik.toml:/etc/traefik.toml
+
+volumes:
+  html:
+  dfs:
+  solrdata:
+  pgdata:

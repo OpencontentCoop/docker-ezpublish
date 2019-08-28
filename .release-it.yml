@@ -1,0 +1,11 @@
+gitlab:
+  release: false
+git:
+  tagname: "${version}"
+  push: false
+  requireCleanWorkingDir: false
+  requireUpstream: false
+hooks:
+  "after:git:release": "echo After git push, before github release"
+  "after:release": "echo Successfully released ${name} version ${version} to ${repo.repository}."
+

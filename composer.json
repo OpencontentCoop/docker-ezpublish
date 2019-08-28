@@ -1,0 +1,116 @@
+{
+  "name": "opencontent/ezpublish",
+  "description": "OpenContent EzPublish Distribution",
+  "license": "GPL-2.0",
+  "minimum-stability": "dev",
+  "require": {
+    "composer/installers": "~1.0.0",
+    "ezsystems/ezpublish-legacy": "dev-master",
+    "ezsystems/ezgmaplocation-ls-extension": "5.3.1.1",
+    "ezsystems/ezfind-ls": "dev-master",
+    "ezsystems/ezwt-ls-extension": "~5.3",
+    "ezsystems/ezmbpaex-ls": "5.3.3.1",
+    "ezsystems/ezpublish-legacy-installer": "dev-settings",
+    "ezsystems/ezflow-ls-extension": "~5.3",
+    "ezsystems/ezmultiupload-ls": "~5.3",
+    "ezsystems/ezprestapiprovider-ls": "~5.3",
+    "ezsystems/ezstarrating-ls-extension": "v5.3.3",
+    "ezsystems/eztags-ls": "2.2.1",
+    "netgen/ngopengraph": "dev-master",
+    "netgen/ngpush": "dev-master",
+    "mugoweb/mugo_varnish": "dev-master",
+    "mugoweb/mugoobjectrelations": "dev-master",
+    "paradoxe/paradoxpdf": "dev-master",
+    "dpobel/ezclasslists-ls": "1.*",
+    "lolautruche/sqliimport": "~1.3",
+    "aws/aws-sdk-php": "3.*",
+    "opencontent/opencontent-project-installer": "~1.0",
+    "opencontent/ezflowplayer-ls": "2.*",
+    "opencontent/ezchangeclass-ls": "1.*",
+    "opencontent/jcremoteid-ls": "1.*",
+    "opencontent/ocbootstrap-ls": "1.*",
+    "opencontent/occhangeloginname-ls": "1.*",
+    "opencontent/occhangeobjectdate-ls": "2.*",
+    "opencontent/occsvimport-ls": "2.*",
+    "opencontent/oceditorialstuff-ls": "2.*",
+    "opencontent/ocembed-ls": "1.*",
+    "opencontent/ocexportas-ls": "1.*",
+    "opencontent/ocinigui-ls": "1.*",
+    "opencontent/ocmaintenance-ls": "2.*",
+    "opencontent/ocopendata-ls": "2.*",
+    "opencontent/ocoperatorscollection-ls": "2.*",
+    "opencontent/ocrecaptcha-ls": "1.*",
+    "opencontent/ocsearchtools-ls": "1.*",
+    "opencontent/ocsocialdesign-ls": "1.*",
+    "opencontent/ocsocialuser-ls": "1.*",
+    "opencontent/openpa-ls": "dev-clustering",
+    "opencontent/openpa_theme_2014-ls": "2.*",
+    "opencontent/ocbinarynullparser-ls": "1.*",
+    "opencontent/ocmultibinary-ls": "2.*",
+    "opencontent/ezpostgresqlcluster-ls": "dev-event_handler",    
+    "opencontent/ocopendata_forms-ls": "1.*",
+    "opencontent/ocevents-ls": "1.*",
+    "opencontent/ocsupport-ls": "dev-master",
+    "opencontent/ocopendata_forms_design-ls": "1.*",
+    "opencontent/ocgdprtools-ls": "1.*",
+    "opencontent/ezuserformtoken-ls": "dev-master",    
+    "opencontent/ocfoshttpcache-ls": "dev-master"
+  },
+  "replace": {
+    "ezsystems/ezdemo-ls-extension": "*"
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/Opencontent/ezpublish-legacy.git"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/Opencontent/ezpublish-legacy-installer.git"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/Opencontent/ezfind.git"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/Opencontent/ezgmaplocation-ls-extension.git"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/Opencontent/ezmbpaex.git"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/Opencontent/mugoobjectrelations.git"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/mugoweb/mugo_varnish.git"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/Opencontent/ezpostgresqlcluster.git"
+    },    
+    {
+      "type": "vcs",
+      "url": "https://github.com/Opencontent/ngopengraph.git"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/Opencontent/ngpush.git"
+    }
+  ],
+  "extra": {
+    "ezpublish-legacy-dir": "html"
+  },
+    "config": {
+    "vendor-dir": "html/vendor",
+    "discard-changes": true
+  },
+  "scripts": {        
+    "post-install-cmd": [            
+      "cd html; php bin/php/ezcache.php --clear-id=global_ini; php bin/php/ezpgenerateautoloads.php -e;sudo service php-fpm reload"
+    ]
+  }
+}
