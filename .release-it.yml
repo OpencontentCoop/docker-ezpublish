@@ -3,7 +3,9 @@ github:
 git:
   tagname: "${version}"
   push: true 
+  changelog: "auto-changelog --stdout --commit-limit false --unreleased"
 hooks:
+  "after:bump": "auto-changelog --commit-limit false --latest-version ${version} --template keepachangelog"
   "after:git:release": "echo Git repo pushed remotely, now working on github release"
   "after:release": "echo Successfully released ${name} version ${version} to ${repo.repository}."
 
