@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 set -e
 
@@ -9,19 +9,39 @@ set -e
 # Example use:
 # ./docker-entrypoint.sh php-fpm
 
+if [[ -z $EZ_ROOT ]]; then
+    echo "[error] EZ_ROOT is empty this variable is required in this container, please set it to the public dir of Ez and restart"
+    exit 1
+fi
+
+EZ_INSTANCE=${EZ_INSTANCE:-'prototipo'}
 
 ## Clear container on start by default
-if [ "$NO_FORCE_SF_CONTAINER_REFRESH" != "" ]; then
-    logger "NO_FORCE_SF_CONTAINER_REFRESH set, skipping Symfony container clearing on startup."
-elif [ -d var/cache ]; then
-    logger "Symfony 3.x structure detected, container is not cleared on startup, use 3.2+ env variables support and warmup container during build."
-elif [ -d ezpublish/cache ]; then
-    logger "Deleting ezpublish/cache/*/*ProjectContainer.php to make sure environment variables are picked up"
-    rm -f ezpublish/cache/*/*ProjectContainer.php
-elif [ -d app/cache ]; then
-    logger "Deleting app/cache/*/*ProjectContainer.php to make sure environment variables are picked up"
-    rm -f app/cache/*/*ProjectContainer.php
+if [ "$NO_FORCE_CONTAINER_REFRESH" != "" ]; then
+    echo "NO_FORCE_SF_CONTAINER_REFRESH set, skipping container clearing on startup."
+else
+    # get a list of possible VarDir from ini settings
+    varDirs=$(egrep '^VarDir=' ${EZ_ROOT}/settings/* -R | cut -d'=' -f2 | sort| uniq)
+    for varDir in $varDirs; do
+	if [[ -d ${EZ_ROOT}/${varDir} ]]; then
+	    echo "[info] cleaning VarDir '${EZ_ROOT}/${varDir}/cache' ..."
+	    chown www-data ${EZ_ROOT}/${varDir} -R 
+	    [[ -d ${EZ_ROOT}/${varDir}/cache ]] && rm -rf ${EZ_ROOT}/${varDir}/cache/*
+	fi
+    done
+
+    # get Ez DFS path (the shared NFS mountpoint) from cluster config
+    dfsPath=$(php -r "include '$EZ_ROOT/settings/cluster-config/config_cluster_${EZ_INSTANCE}.php'; echo CLUSTER_MOUNT_POINT_PATH;")
+    if [[ -n $dfsPath ]]; then
+	if [[ -d $dfsPath ]]; then
+	    chown www-data ${dfsPath} -R 
+	    
+	    echo "[info] cleaning DFS Path '${dfsPath}/var/*/cache' ..."
+	    rm -rf ${dfsPath}/var/*/cache/*
+	fi
+    fi
 fi
+
 
 ## Adjust behat.yml if asked for from localhost setup to use defined hosts
 if [ "$BEHAT_SELENIUM_HOST" != "" ] && [ "$BEHAT_WEB_HOST" != "" ]; then
@@ -66,5 +86,16 @@ env | while IFS='=' read -r name value ; do
     echo $name=$value >> ${PHP_INI_DIR}/conf.d/zzz_custom_settings.ini
   fi
 done
+
+
+# FIXME: Export logs in stdout
+# very bad way to export logs... probably we need to fix it in ezpublish
+# kernel
+for logfile in cluster_error debug error ocfoshttpcache storage warning; do
+  # a link doesn't do the trick, because php-fpm does not under root user
+  #  ln -sf /dev/stdout /var/www/html/var/log/${logfile}.log
+  tail -F --pid $$ /var/www/html/var/log/${logfile}.log &
+done
+
 
 exec "$@"
