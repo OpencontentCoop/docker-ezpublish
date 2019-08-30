@@ -128,11 +128,12 @@ RUN echo "Running composer"  \
 	&& composer install --prefer-dist --no-scripts --no-dev \ 
 	&& rm -rf /root/.composer 
 	
-COPY scripts /scripts
 
 # Add some custom config
 COPY conf.d/php.ini ${PHP_INI_DIR}/conf.d/php.ini
 
+# Add entrypoint script
+COPY scripts /scripts
 RUN chmod 755 /scripts/*.sh
 
 
