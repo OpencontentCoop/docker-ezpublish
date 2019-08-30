@@ -1,11 +1,9 @@
-gitlab:
-  release: false
+github:
+  release: true
 git:
   tagname: "${version}"
-  push: false
-  requireCleanWorkingDir: false
-  requireUpstream: false
+  push: true 
 hooks:
-  "after:git:release": "echo After git push, before github release"
+  "after:git:release": "echo Git repo pushed remotely, now working on github release"
   "after:release": "echo Successfully released ${name} version ${version} to ${repo.repository}."
 
