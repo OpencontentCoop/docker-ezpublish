@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4948550d4ad88f3c9ecd80cd99ade044",
+    "content-hash": "20a09ff0c557ca5d9fd26ba1280a60ea",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -629,12 +629,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Opencontent/ezpublish-legacy.git",
-                "reference": "11d44ecd102e20358e7b286f0f32190302e3b396"
+                "reference": "19701b9042823ae7a36269575583d7168898b623"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Opencontent/ezpublish-legacy/zipball/11d44ecd102e20358e7b286f0f32190302e3b396",
-                "reference": "11d44ecd102e20358e7b286f0f32190302e3b396",
+                "url": "https://api.github.com/repos/Opencontent/ezpublish-legacy/zipball/19701b9042823ae7a36269575583d7168898b623",
+                "reference": "19701b9042823ae7a36269575583d7168898b623",
                 "shasum": ""
             },
             "require": {
@@ -732,7 +732,7 @@
             "support": {
                 "source": "https://github.com/Opencontent/ezpublish-legacy/tree/master"
             },
-            "time": "2019-06-13T15:10:17+00:00"
+            "time": "2019-08-23T16:48:21+00:00"
         },
         {
             "name": "ezsystems/ezpublish-legacy-installer",
@@ -820,16 +820,16 @@
         },
         {
             "name": "ezsystems/eztags-ls",
-            "version": "2.2.1",
+            "version": "2.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ezsystems/eztags.git",
-                "reference": "9ca78b14b49b0a3b62208049cb8778ed93e7909f"
+                "reference": "11d153fa8552ae5600d3ff6870b42db75f86e96c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ezsystems/eztags/zipball/9ca78b14b49b0a3b62208049cb8778ed93e7909f",
-                "reference": "9ca78b14b49b0a3b62208049cb8778ed93e7909f",
+                "url": "https://api.github.com/repos/ezsystems/eztags/zipball/11d153fa8552ae5600d3ff6870b42db75f86e96c",
+                "reference": "11d153fa8552ae5600d3ff6870b42db75f86e96c",
                 "shasum": ""
             },
             "require": {
@@ -839,7 +839,7 @@
             "extra": {
                 "ezpublish-legacy-extension-name": "eztags",
                 "branch-alias": {
-                    "dev-master": "2.2.x-dev"
+                    "dev-master": "2.3.x-dev"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -857,7 +857,7 @@
                 }
             ],
             "description": "eZ Tags is an extension for eZ Publish, providing more functionality for tagging content objects than ezkeyword datatype included in eZ Publish kernel.",
-            "time": "2016-10-31T11:34:18+00:00"
+            "time": "2018-01-11T20:58:15+00:00"
         },
         {
             "name": "ezsystems/ezwt-ls-extension",
@@ -980,12 +980,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "61494bf259393e972f60ff34476dd55ab90cb4a8"
+                "reference": "a7010cc9b52ecfa00051bb26e4ae025958fe9851"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/61494bf259393e972f60ff34476dd55ab90cb4a8",
-                "reference": "61494bf259393e972f60ff34476dd55ab90cb4a8",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/a7010cc9b52ecfa00051bb26e4ae025958fe9851",
+                "reference": "a7010cc9b52ecfa00051bb26e4ae025958fe9851",
                 "shasum": ""
             },
             "require": {
@@ -1038,7 +1038,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2019-08-13T11:06:12+00:00"
+            "time": "2019-08-23T22:16:30+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -2402,12 +2402,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/OpencontentCoop/openpa.git",
-                "reference": "08ae4b7231135c0f35d71b92068491f08151b774"
+                "reference": "7bcc76a0146e684ec5ea2eaff8ff4c9e222ed294"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OpencontentCoop/openpa/zipball/08ae4b7231135c0f35d71b92068491f08151b774",
-                "reference": "08ae4b7231135c0f35d71b92068491f08151b774",
+                "url": "https://api.github.com/repos/OpencontentCoop/openpa/zipball/7bcc76a0146e684ec5ea2eaff8ff4c9e222ed294",
+                "reference": "7bcc76a0146e684ec5ea2eaff8ff4c9e222ed294",
                 "shasum": ""
             },
             "require": {
@@ -2429,7 +2429,7 @@
                 }
             ],
             "description": "OpenContent OpenPA",
-            "time": "2019-08-20T06:54:28+00:00"
+            "time": "2019-08-20T13:07:53+00:00"
         },
         {
             "name": "opencontent/openpa_agenda-ls",
@@ -3003,12 +3003,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-client.git",
-                "reference": "496a823ef742b632934724bf769560c2a5c7c44e"
+                "reference": "fd5d37ae5a76ee3c5301a762faf66bf9519132ef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-client/zipball/496a823ef742b632934724bf769560c2a5c7c44e",
-                "reference": "496a823ef742b632934724bf769560c2a5c7c44e",
+                "url": "https://api.github.com/repos/php-fig/http-client/zipball/fd5d37ae5a76ee3c5301a762faf66bf9519132ef",
+                "reference": "fd5d37ae5a76ee3c5301a762faf66bf9519132ef",
                 "shasum": ""
             },
             "require": {
@@ -3044,7 +3044,7 @@
                 "psr",
                 "psr-18"
             ],
-            "time": "2018-10-30T23:29:13+00:00"
+            "time": "2019-09-04T06:46:09+00:00"
         },
         {
             "name": "psr/http-message",
@@ -3052,12 +3052,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-message.git",
-                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363"
+                "reference": "efd67d1dc14a7ef4fc4e518e7dee91c271d524e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-message/zipball/f6561bf28d520154e4b0ec72be95418abe6d9363",
-                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363",
+                "url": "https://api.github.com/repos/php-fig/http-message/zipball/efd67d1dc14a7ef4fc4e518e7dee91c271d524e4",
+                "reference": "efd67d1dc14a7ef4fc4e518e7dee91c271d524e4",
                 "shasum": ""
             },
             "require": {
@@ -3094,7 +3094,7 @@
                 "request",
                 "response"
             ],
-            "time": "2016-08-06T14:39:51+00:00"
+            "time": "2019-08-29T13:16:46+00:00"
         },
         {
             "name": "psr/log",
@@ -3189,12 +3189,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "d6d4b081385c7259dc0a27656c7eda242973876a"
+                "reference": "9b8fca87435658d01b57edd1f7d059a4ea4367ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/d6d4b081385c7259dc0a27656c7eda242973876a",
-                "reference": "d6d4b081385c7259dc0a27656c7eda242973876a",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/9b8fca87435658d01b57edd1f7d059a4ea4367ba",
+                "reference": "9b8fca87435658d01b57edd1f7d059a4ea4367ba",
                 "shasum": ""
             },
             "require": {
@@ -3251,7 +3251,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2019-08-10T20:49:34+00:00"
+            "time": "2019-08-26T09:00:56+00:00"
         },
         {
             "name": "symfony/event-dispatcher-contracts",
@@ -4756,7 +4756,6 @@
         "paradoxe/paradoxpdf": 20,
         "opencontent/openpa-ls": 20,
         "opencontent/ezpostgresqlcluster-ls": 20,
-        "opencontent/easyvocs_connector-ls": 20,
         "opencontent/ocsupport-ls": 20,
         "opencontent/ezuserformtoken-ls": 20,
         "opencontent/ocfoshttpcache-ls": 20

@@ -15,7 +15,7 @@
     "ezsystems/ezmultiupload-ls": "~5.3",
     "ezsystems/ezprestapiprovider-ls": "~5.3",
     "ezsystems/ezstarrating-ls-extension": "v5.3.3",
-    "ezsystems/eztags-ls": "2.2.1",
+    "ezsystems/eztags-ls": "2.2.2",
     "netgen/ngopengraph": "dev-master",
     "netgen/ngpush": "dev-master",
     "mugoweb/mugo_varnish": "dev-master",
