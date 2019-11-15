@@ -14,7 +14,14 @@ if [[ -z $EZ_ROOT ]]; then
     exit 1
 fi
 
-EZ_INSTANCE=${EZ_INSTANCE:-'prototipo'}
+
+# If a variable specifing a specific instances exists we apply our bootstrap changes to that instance
+# otherwise the changes are applied to all instances
+if [[ -n $EZ_INSTANCE ]]; then
+    EZ_INSTANCES="$EZ_INSTANCE"
+else
+    EZ_INSTANCES=$(grep 'AvailableSiteAccessList\[\]' settings/override/site.ini.append.php|cut -d= -f2 | grep backend)
+fi
 
 ## Clear container on start by default
 if [ "$NO_FORCE_CONTAINER_REFRESH" != "" ]; then
@@ -30,15 +37,11 @@ else
 	fi
     done
 
-    # get Ez DFS path (the shared NFS mountpoint) from cluster config
-    dfsPath=$(php -r "include '$EZ_ROOT/settings/cluster-config/config_cluster_${EZ_INSTANCE}.php'; echo CLUSTER_MOUNT_POINT_PATH;")
-    if [[ -n $dfsPath ]]; then
-	if [[ -d $dfsPath ]]; then
-	    chown www-data ${dfsPath} -R 
-	    
-	    echo "[info] cleaning DFS Path '${dfsPath}/var/*/cache' ..."
-	    rm -rf ${dfsPath}/var/*/cache/*
-	fi
+    if [[ -n $EZ_INSTANCES ]]; then
+	for EZ_INSTANCE in $EZ_INSTANCES; do
+	    echo "[info] cleaning DFS for instance ${EZ_INSTANCE} .."
+	    php bin/php/ezcache.php --clear-all -s${EZ_INSTANCE} --allow-root-user
+	done
     fi
 fi
 
