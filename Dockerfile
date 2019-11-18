@@ -150,7 +150,6 @@ RUN php bin/php/ezcache.php --clear-id=global_ini --allow-root-user \
 
 WORKDIR /var/www
 
-VOLUME [ "/var/www/html" ]
 ENTRYPOINT ["/scripts/docker-entrypoint.sh"]
 CMD php-fpm
 EXPOSE 9000
