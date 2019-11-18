@@ -12,36 +12,45 @@ set -e
 if [[ -z $EZ_ROOT ]]; then
     echo "[error] EZ_ROOT is empty this variable is required in this container, please set it to the public dir of Ez and restart"
     exit 1
+else
+    echo "[info] Current root is ${EZ_ROOT}"
 fi
 
-
+EZ_INSTANCE=${EZ_INSTANCE:-''}
 # If a variable specifing a specific instances exists we apply our bootstrap changes to that instance
 # otherwise the changes are applied to all instances
 if [[ -n $EZ_INSTANCE ]]; then
     EZ_INSTANCES="$EZ_INSTANCE"
 else
-    EZ_INSTANCES=$(grep 'AvailableSiteAccessList\[\]' settings/override/site.ini.append.php|cut -d= -f2 | grep backend)
+    EZ_INSTANCES=$(grep 'AvailableSiteAccessList\[\]' ${EZ_ROOT}/settings/override/site.ini.append.php | cut -d= -f2 | grep backend)
+fi
+
+if [[ -n $EZ_INSTANCES ]]; then
+    echo "[info] Current instances: ${EZ_INSTANCES}"
 fi
 
 ## Clear container on start by default
 if [ "$NO_FORCE_CONTAINER_REFRESH" != "" ]; then
-    echo "NO_FORCE_SF_CONTAINER_REFRESH set, skipping container clearing on startup."
+    echo "[info] NO_FORCE_SF_CONTAINER_REFRESH set, skipping container clearing on startup."
 else
+    echo "[info] NO_FORCE_SF_CONTAINER_REFRESH is not set, clearing container..."
     # get a list of possible VarDir from ini settings
     varDirs=$(egrep '^VarDir=' ${EZ_ROOT}/settings/* -R | cut -d'=' -f2 | sort| uniq)
     for varDir in $varDirs; do
-	if [[ -d ${EZ_ROOT}/${varDir} ]]; then
-	    echo "[info] cleaning VarDir '${EZ_ROOT}/${varDir}/cache' ..."
-	    chown www-data ${EZ_ROOT}/${varDir} -R 
-	    [[ -d ${EZ_ROOT}/${varDir}/cache ]] && rm -rf ${EZ_ROOT}/${varDir}/cache/*
-	fi
+    if [[ -d ${EZ_ROOT}/${varDir} ]]; then
+        echo "[info] cleaning VarDir '${EZ_ROOT}/${varDir}/cache' ..."
+        chown www-data ${EZ_ROOT}/${varDir} -R
+        [[ -d ${EZ_ROOT}/${varDir}/cache ]] && rm -rf ${EZ_ROOT}/${varDir}/cache/*
+    else
+       echo "[info] no VarDir found"
+    fi
     done
 
     if [[ -n $EZ_INSTANCES ]]; then
-	for EZ_INSTANCE in $EZ_INSTANCES; do
-	    echo "[info] cleaning DFS for instance ${EZ_INSTANCE} .."
-	    php bin/php/ezcache.php --clear-all -s${EZ_INSTANCE} --allow-root-user
-	done
+    for EZ_INSTANCE in $EZ_INSTANCES; do
+        echo "[info] cleaning DFS for instance ${EZ_INSTANCE} with php bin/php/ezcache.php --clear-all -s${EZ_INSTANCE} --allow-root-user"
+        php bin/php/ezcache.php --clear-all -s${EZ_INSTANCE} --allow-root-user
+    done
     fi
 fi
 
@@ -94,10 +103,10 @@ done
 # FIXME: Export logs in stdout
 # very bad way to export logs... probably we need to fix it in ezpublish
 # kernel
-for logfile in cluster_error debug error ocfoshttpcache storage warning; do
+for logfile in cluster_error debug error ocfoshttpcache storage warning mugo_varnish_purges; do
   # a link doesn't do the trick, because php-fpm does not under root user
   #  ln -sf /dev/stdout /var/www/html/var/log/${logfile}.log
-  tail -F --pid $$ /var/www/html/var/log/${logfile}.log &
+  [[ -f $logfile ]] && tail -F --pid $$ /var/www/html/var/log/${logfile}.log &
 done
 
 
