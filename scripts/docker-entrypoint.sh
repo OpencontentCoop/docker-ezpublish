@@ -37,21 +37,32 @@ else
     # get a list of possible VarDir from ini settings
     varDirs=$(egrep '^VarDir=' ${EZ_ROOT}/settings/* -R | cut -d'=' -f2 | sort| uniq)
     for varDir in $varDirs; do
-    if [[ -d ${EZ_ROOT}/${varDir} ]]; then
-        echo "[info] cleaning VarDir '${EZ_ROOT}/${varDir}/cache' ..."
-        chown www-data ${EZ_ROOT}/${varDir} -R
-        [[ -d ${EZ_ROOT}/${varDir}/cache ]] && rm -rf ${EZ_ROOT}/${varDir}/cache/*
-    else
-       echo "[info] no VarDir found"
-    fi
+        if [[ -d ${EZ_ROOT}/${varDir} ]]; then
+            echo "[info] cleaning VarDir '${EZ_ROOT}/${varDir}/cache' ..."
+            chown www-data ${EZ_ROOT}/${varDir} -R
+            #[[ -d ${EZ_ROOT}/${varDir}/cache ]] && rm -rf ${EZ_ROOT}/${varDir}/cache/*
+        else
+            echo "[info] no VarDir found"
+        fi
     done
 
     if [[ -n $EZ_INSTANCES ]]; then
-    for EZ_INSTANCE in $EZ_INSTANCES; do
-        echo "[info] cleaning DFS for instance ${EZ_INSTANCE} with php bin/php/ezcache.php --clear-all -s${EZ_INSTANCE} --allow-root-user"
-        php bin/php/ezcache.php --clear-all -s${EZ_INSTANCE} --allow-root-user
-    done
+        for EZ_INSTANCE in $EZ_INSTANCES; do
+            echo "[info] cleaning DFS for instance ${EZ_INSTANCE} with php bin/php/ezcache.php --clear-all -s${EZ_INSTANCE} --allow-root-user"
+            php bin/php/ezcache.php --clear-all -s${EZ_INSTANCE} --allow-root-user
+        done
     fi
+
+    dfsDirs=$(egrep '^MountPointPath=.+' ${EZ_ROOT}/settings/* -R | cut -d'=' -f2 | sort| uniq)
+    for dfsDir in $dfsDirs; do
+        if [[ -d ${dfsDir} ]]; then
+            echo "[info] fixing perms in '${dfsDir}' ..."
+            chown www-data ${dfsDir} 
+        else
+            echo "[info] no VarDir found"
+        fi
+    done
+
 fi
 
 
