@@ -120,5 +120,8 @@ for logfile in cluster_error debug error ocfoshttpcache storage warning mugo_var
   [[ -f $logfile ]] && tail -F --pid $$ /var/www/html/var/log/${logfile}.log &
 done
 
+if [[ -n $CONSUL_PREFIX ]]; then
+  consul watch -type=keyprefix -prefix=${CONSUL_PREFIX} /scripts/consul2files.sh ${CONSUL_PREFIX} /var/www/html/settings 
+fi
 
 exec "$@"

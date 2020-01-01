@@ -17,6 +17,7 @@ RUN apt-get update -q -y \
         ca-certificates \
         curl \
         acl \
+        jq \
         sudo \
 # Needed for the php extensions we enable below
         libfreetype6 \
@@ -98,8 +99,6 @@ RUN set -xe \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $buildDeps
 
 
-
-
 # Set timezone
 RUN echo "UTC" > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
 
@@ -109,6 +108,7 @@ RUN sed -i "s@^\[global\]@\[global\]\n\npid = /run/php-fpm.pid@" ${PHP_INI_DIR}-
 # Create Composer directory (cache and auth files) & Get Composer
 RUN mkdir -p $COMPOSER_HOME \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
 WORKDIR /var/www
 
 COPY composer.json composer.lock /var/www/
@@ -128,6 +128,8 @@ RUN echo "Running composer"  \
 	&& composer install --prefer-dist --no-scripts --no-dev \ 
 	&& rm -rf /root/.composer 
 	
+# Add consul client to allow configuration using consul KV store
+COPY --from=consul:1.6 /bin/consul /bin/consul
 
 # Add some custom config
 COPY conf.d/php.ini ${PHP_INI_DIR}/conf.d/php.ini
@@ -153,3 +155,4 @@ WORKDIR /var/www
 ENTRYPOINT ["/scripts/docker-entrypoint.sh"]
 CMD php-fpm
 EXPOSE 9000
+
