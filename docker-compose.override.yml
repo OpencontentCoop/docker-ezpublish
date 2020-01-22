@@ -9,6 +9,11 @@ services:
       - ./var/prototipo:/var/www/html/var/prototipo
       - ./dfs:/mnt/efs/cluster-openpa
       - ./conf.d/ez:/var/www/html/settings
+ 
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
 
   pgweb:
     image: sosedoff/pgweb
