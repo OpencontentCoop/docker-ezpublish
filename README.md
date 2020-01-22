@@ -1,11 +1,23 @@
 # Ez Publish Legacy
 
 ![GitHub](https://img.shields.io/github/license/OpencontentCoop/docker-ezpublish)
-![Docker Automated build](https://img.shields.io/docker/automated/opencontentcoop/ezpublish)
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/OpencontentCoop/docker-ezpublish?sort=semver)
+
+Image *opencontentcoop/ezpublish*
+
+![Docker Automated build](https://img.shields.io/docker/cloud/automated/opencontentcoop/ezpublish)
 ![Docker build status](https://img.shields.io/docker/build/opencontentcoop/ezpublish)
 ![MicroBadger Layers](https://img.shields.io/microbadger/layers/opencontentcoop/ezpublish)
 ![MicroBadger Image Size](https://img.shields.io/microbadger/image-size/opencontentcoop/ezpublish)
-![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/OpencontentCoop/docker-ezpublish?sort=semver)
+
+Image *opencontentcoop/ezpublish-nginx*
+
+![Docker Automated build](https://img.shields.io/docker/cloud/automated/opencontentcoop/ezpublish-nginx)
+![Docker build status](https://img.shields.io/docker/build/opencontentcoop/ezpublish-nginx)
+![MicroBadger Layers](https://img.shields.io/microbadger/layers/opencontentcoop/ezpublish-nginx)
+![MicroBadger Image Size](https://img.shields.io/microbadger/image-size/opencontentcoop/ezpublish-nginx)
+
+
 
 This repository is used to create e Docker base-image for projects developed by Opencontent using Ez Publish.
 
