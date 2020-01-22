@@ -6,7 +6,7 @@
 Image *opencontentcoop/ezpublish*
 
 ![Docker Automated build](https://img.shields.io/docker/cloud/automated/opencontentcoop/ezpublish)
-![Docker build status](https://img.shields.io/docker/build/opencontentcoop/ezpublish)
+![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/opencontentcoop/ezpublish)
 ![MicroBadger Layers](https://img.shields.io/microbadger/layers/opencontentcoop/ezpublish)
 ![MicroBadger Image Size](https://img.shields.io/microbadger/image-size/opencontentcoop/ezpublish)
 
