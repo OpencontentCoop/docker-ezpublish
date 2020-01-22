@@ -18,3 +18,10 @@ To better understand how we use this repo, please check some project that use it
 
 Basically we use the base image to install all the OS dependencies of Ez, the next step we add to Dockerfile
 is commonly add the _composer.*_ files for the specific project.
+
+## Nginx image
+
+The nginx image is a simple alpine-based nginx with a virtualhost configured for ez publish
+
+The image uses also [nginx-prometheus-exporter](https://github.com/nginxinc/nginx-prometheus-exporter) and expose
+nginx metrics in prometheus format on `/metrics` url, check the [official Grafana dashboard](https://github.com/nginxinc/nginx-prometheus-exporter/blob/master/grafana/README.md) to show these metrics
