@@ -1,4 +1,4 @@
-FROM php:7.2-fpm-stretch
+FROM php:7.2.26-fpm-stretch
 # Fixed version with OS Debian strech for the issue here explained
 # https://github.com/docker-library/php/issues/865
 #
