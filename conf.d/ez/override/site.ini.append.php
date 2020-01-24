@@ -15,9 +15,9 @@ LogSearchStats=disabled
 
 [DatabaseSettings]
 DatabaseImplementation=ezpostgresql
-Server=localhost
+Server=postgres
 User=postgres
-Password=verygoodpassword
+Password=verygoodsecret
 Database=ezpublish
 Charset=utf-8
 Socket=disabled
