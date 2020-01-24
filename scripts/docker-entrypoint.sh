@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -x
 
 # See:
 # - Doc: https://docs.docker.com/engine/reference/builder/#entrypoint
@@ -26,7 +26,9 @@ else
 fi
 
 if [[ -n $EZ_INSTANCES ]]; then
-    echo "[info] Current instances: ${EZ_INSTANCES}"
+    echo "[info] Current instance(s): ${EZ_INSTANCES}"
+else
+    echo "[info] No ez instances found"
 fi
 
 ## Clear container on start by default
@@ -117,7 +119,10 @@ done
 for logfile in cluster_error debug error ocfoshttpcache storage warning mugo_varnish_purges; do
   # a link doesn't do the trick, because php-fpm does not under root user
   #  ln -sf /dev/stdout /var/www/html/var/log/${logfile}.log
-  [[ -f $logfile ]] && tail -F --pid $$ /var/www/html/var/log/${logfile}.log &
+  [[ ! -f $logfile ]] && \
+    touch /var/www/html/var/log/${logfile}.log && \
+    chown www-data /var/www/html/var/log/${logfile}.log 
+  tail -F --pid $$ /var/www/html/var/log/${logfile}.log &
 done
 
 if [[ -n $CONSUL_PREFIX ]]; then

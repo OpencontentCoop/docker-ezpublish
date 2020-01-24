@@ -1,0 +1,96 @@
+image: docker:latest
+
+stages:
+    - build
+    - build_nginx
+
+variables:
+    PHP_IMAGE: "${CI_REGISTRY_IMAGE}/php"
+    PHP_TMP_IMAGE: "${CI_REGISTRY_IMAGE}/php:${CI_COMMIT_SHORT_SHA}"
+    NGINX_IMAGE: "${CI_REGISTRY_IMAGE}/nginx"
+    NGINX_TMP_IMAGE: "${CI_REGISTRY_IMAGE}/nginx:${CI_COMMIT_SHORT_SHA}"
+
+services:
+  - docker:dind
+
+before_script:
+  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+
+    
+tmp_build_php:
+    stage: build
+    script:
+        - docker pull  $PHP_TMP_IMAGE || docker build --pull -t $PHP_TMP_IMAGE . 
+        - docker push  $PHP_TMP_IMAGE
+    only:
+      - branches
+      - tags
+
+tmp_build_nginx:
+    stage: build_nginx
+    script:
+        - docker pull  $NGINX_TMP_IMAGE || docker build --pull --build-arg php_image=$PHP_TMP_IMAGE -t $NGINX_TMP_IMAGE -f Dockerfile.nginx . 
+        - docker push  $NGINX_TMP_IMAGE
+    only:
+      - branches
+      - tags
+
+push_php_branches:
+    stage: push
+    script:
+        - docker pull  $PHP_TMP_IMAGE
+        - docker tag   $PHP_TMP_IMAGE "$PHP_IMAGE:$CI_COMMIT_REF_NAME" 
+        - docker push "$PHP_IMAGE:$CI_COMMIT_REF_NAME"
+    only:
+        - branches
+    except:
+        - master
+
+push_php_tags:
+    stage: push
+    script:
+        - docker pull  $PHP_TMP_IMAGE
+        - docker tag   $PHP_TMP_IMAGE "$PHP_IMAGE:$CI_COMMIT_TAG"
+        - docker push "$PHP_IMAGE:$CI_COMMIT_TAG"
+    only:
+        - tags
+
+push_php_latest:
+    stage: push
+    script:
+        - docker pull  $PHP_TMP_IMAGE
+        - docker tag   $PHP_TMP_IMAGE "$PHP_IMAGE:latest"
+        - docker push "$PHP_IMAGE:latest"
+    only:
+        - master
+
+push_nginx_branches:
+    stage: push
+    script:
+        - docker pull  $NGINX_TMP_IMAGE
+        - docker tag   $NGINX_TMP_IMAGE "$NGINX_IMAGE:$CI_COMMIT_REF_NAME" 
+        - docker push "$NGINX_IMAGE:$CI_COMMIT_REF_NAME"
+    only:
+        - branches
+    except:
+        - master
+
+push_nginx_tags:
+    stage: push
+    script:
+        - docker pull  $NGINX_TMP_IMAGE
+        - docker tag   $NGINX_TMP_IMAGE "$NGINX_IMAGE:$CI_COMMIT_TAG"
+        - docker push "$NGINX_IMAGE:$CI_COMMIT_TAG"
+    only:
+        - tags
+
+push_nginx_latest:
+    stage: push
+    script:
+        - docker pull  $NGINX_TMP_IMAGE
+        - docker tag   $NGINX_TMP_IMAGE "$NGINX_IMAGE:latest"
+        - docker push "$NGINX_IMAGE:latest"
+    only:
+        - master
+
+vim: set noet sw=4 ts=4:        
