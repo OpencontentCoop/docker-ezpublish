@@ -1,8 +1,9 @@
 image: docker:latest
 
 stages:
-    - build
-    - build_nginx
+  - build
+  - build_nginx
+  - push
 
 variables:
     PHP_IMAGE: "${CI_REGISTRY_IMAGE}/php"
