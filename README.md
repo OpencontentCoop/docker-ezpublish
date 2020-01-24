@@ -37,3 +37,13 @@ The nginx image is a simple alpine-based nginx with a virtualhost configured for
 
 The image uses also [nginx-prometheus-exporter](https://github.com/nginxinc/nginx-prometheus-exporter) and expose
 nginx metrics in prometheus format on `/metrics` url, check the [official Grafana dashboard](https://github.com/nginxinc/nginx-prometheus-exporter/blob/master/grafana/README.md) to show these metrics
+
+### Configuration using Environment Variables
+
+| Variable | Type | Default value | Description |
+| ---------|------|---------------|-------------|
+| PROMETHEUS_DISABLE | Boolean | none | If set to TRUE disable the prometheus monitoring |
+
+There are also some variables coming from the prometheus exports, but they are not useful in 
+this nginx setup, where the configuration of nginx is hardcoded. For more details check: 
+https://github.com/nginxinc/nginx-prometheus-exporter
