@@ -15,15 +15,12 @@ services:
     restart: unless-stopped
     labels:
       traefik.frontend.rule: 'Host:ezpublish.localtest.me'
+    environment:
+      EZ_INSTANCE: cicciobalena
     depends_on:
       - php
     volumes:
-      - './conf.d/nginx-vhost.conf:/etc/nginx/conf.d/default.conf'
       - 'html:/var/www/html'
-    #healthcheck:
-    #  test: ["CMD", "curl", "-f", "http://localhost/ezinfo/is_alive"]
-    #  interval: 1m30s
-    #  start_period: 5s
 
   varnish:
     image: wodby/varnish
