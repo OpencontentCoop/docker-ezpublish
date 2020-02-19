@@ -7,7 +7,7 @@ FROM nginx:1.17.8-alpine
 
 RUN apk add --no-cache bash httpie
 
-COPY --from=nginx/nginx-prometheus-exporter:0.5.0 /usr/bin/exporter /usr/bin/
+COPY --from=nginx/nginx-prometheus-exporter:0.6.0 /usr/bin/exporter /usr/bin/
 
 RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
     ln -sf /dev/stderr /var/log/nginx/error.log
