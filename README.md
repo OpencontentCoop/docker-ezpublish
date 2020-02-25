@@ -42,7 +42,10 @@ nginx metrics in prometheus format on `/metrics` url, check the [official Grafan
 
 | Variable | Type | Default value | Description |
 | ---------|------|---------------|-------------|
+| EZ_INSTANCE | String | prototipo | If set change the value of '$instance' variable in nginx virtulahost |
 | PROMETHEUS_DISABLE | Boolean | none | If set to TRUE disable the prometheus monitoring |
+| DEBUG | Boolean | none | If set to TRUE enable debugging of bash scripts |
+
 
 There are also some variables coming from the prometheus exports, but they are not useful in 
 this nginx setup, where the configuration of nginx is hardcoded. For more details check: 
