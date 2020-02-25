@@ -24,8 +24,8 @@ RUN apt-get update -q -y \
         libjpeg62-turbo \
         libxpm4 \
         libpng16-16 \
-	libpq-dev \
-	libpq5 \
+        libpq-dev \
+        libpq5 \
         libxslt1.1 \
         libmemcachedutil2 \
         imagemagick \
@@ -57,12 +57,12 @@ RUN set -xe \
     && cp /usr/src/php/php.ini-production ${PHP_INI_DIR}/php.ini \
     \
 # Install blackfire: https://blackfire.io/docs/integrations/docker
-    && version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
-    && curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/linux/amd64/$version \
-    && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp \
-    && mv /tmp/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
-    && rm -f /tmp/blackfire-probe.tar.gz \
-    \
+#    && version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
+#    && curl -A "Docker" -o /tmp/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/linux/amd64/$version \
+#    && tar zxpf /tmp/blackfire-probe.tar.gz -C /tmp \
+#    && mv /tmp/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
+#    && rm -f /tmp/blackfire-probe.tar.gz \
+#    \
 # Install igbinary (for more efficient serialization in redis/memcached)
     && for i in $(seq 1 3); do pecl install -o igbinary && s=0 && break || s=$? && sleep 1; done; (exit $s) \
     && docker-php-ext-enable igbinary \
@@ -109,19 +109,20 @@ RUN sed -i "s@^\[global\]@\[global\]\n\npid = /run/php-fpm.pid@" ${PHP_INI_DIR}-
 RUN mkdir -p $COMPOSER_HOME \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+# Add some custom config
+COPY conf.d/php.ini ${PHP_INI_DIR}/conf.d/php.ini
+
+# Add entrypoint script
+COPY scripts /scripts
+RUN chmod 755 /scripts/*.sh
+
+# Needed for docker-machine
+# RUN usermod -u 1000 www-data
+
 WORKDIR /var/www
 
 COPY composer.json composer.lock /var/www/
 
-# the following variable exists only during build-time
-# pass the correct value during build:
-#     $ docker build --build-arg github_token=abcdef123456 # [...]
-#
-ARG GITHUB_TOKEN=abcdef123456
-# Avoid the following line, because leave the environment variable
-# in the final image
-# ENV GITHUB_TOKEN=$github_token
-# The secure way to do it is to prepend the command with the variable definition:
 ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN echo "Running composer"  \
 	&& composer global require hirak/prestissimo \
@@ -131,19 +132,11 @@ RUN echo "Running composer"  \
 # Add consul client to allow configuration using consul KV store
 COPY --from=consul:1.6 /bin/consul /bin/consul
 
-# Add some custom config
-COPY conf.d/php.ini ${PHP_INI_DIR}/conf.d/php.ini
-
-# Add entrypoint script
-COPY scripts /scripts
-RUN chmod 755 /scripts/*.sh
 
 
 # Add custom settings of prototipo
 COPY conf.d/ez /var/www/html/settings
 
-# Needed for docker-machine
-# RUN usermod -u 1000 www-data
 
 WORKDIR /var/www/html
 
@@ -153,6 +146,8 @@ RUN php bin/php/ezcache.php --clear-id=global_ini --allow-root-user \
 WORKDIR /var/www
 
 ENTRYPOINT ["/scripts/docker-entrypoint.sh"]
+
 CMD php-fpm
+
 EXPOSE 9000
 
