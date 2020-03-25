@@ -132,11 +132,12 @@ RUN echo "Running composer"  \
 # Add consul client to allow configuration using consul KV store
 COPY --from=consul:1.6 /bin/consul /bin/consul
 
-
+# Add wait-for-it utility to check services readiness
+RUN curl https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh > /bin/wait-for-it && \
+    chmod +x /bin/wait-for-it
 
 # Add custom settings of prototipo
 COPY conf.d/ez /var/www/html/settings
-
 
 WORKDIR /var/www/html
 

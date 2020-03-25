@@ -42,11 +42,22 @@ nginx metrics in prometheus format on `/metrics` url, check the [official Grafan
 
 | Variable | Type | Default value | Description |
 | ---------|------|---------------|-------------|
+| EZ_ROOT  | String | /var/www/html | Root of EZ Filesystem |
 | EZ_INSTANCE | String | prototipo | If set change the value of '$instance' variable in nginx virtulahost |
+| NO_FORCE_CONTAINER_REFRESH | Boolean | true | If set to true |
 | PROMETHEUS_DISABLE | Boolean | none | If set to TRUE disable the prometheus monitoring |
 | DEBUG | Boolean | none | If set to TRUE enable debugging of bash scripts |
-
+| BEHAT_SELENIUM_HOST | String | none | BeHat Selenium host |
+| BEHAT_WEB_HOST | String | none | BeHat Web Host |
+| PHP_INI_ENV\_[NAME] | Any variable with prefix PHP_INI_ENV is injected in `${PHP_INI_DIR}/conf.d/zzz_custom_settings.ini` |
 
 There are also some variables coming from the prometheus exports, but they are not useful in 
 this nginx setup, where the configuration of nginx is hardcoded. For more details check: 
 https://github.com/nginxinc/nginx-prometheus-exporter
+
+### Customize image entrypoint
+
+Add your entrypoint customization scripts to `/docker-entrypoint-initdb.d/`, any sh file there
+is executed at some point of docker container bootstrap
+
+

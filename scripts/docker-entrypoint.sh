@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -x
+[[ -n $DEBUG ]] && set -ex
 
 # See:
 # - Doc: https://docs.docker.com/engine/reference/builder/#entrypoint
@@ -31,11 +31,32 @@ else
     echo "[info] No ez instances found"
 fi
 
+
+# Check availability of Postgres
+pg_server=${EZINI_site__DatabaseSettings__Server:-postgres}
+pg_port=${EZINI_site__DatabaseSettings__Port:-5432}
+wait-for-it $pg_server:$pg_port --timeout=0 --strict -- echo "Postgres server @ ${pg_server}:${pg_port} is UP"
+
+# Check availability of Solr
+if [[ -n $EZINI_solr__SolrBase__SearchServerURI ]]; then
+  if [[ $EZINI_solr__SolrBase__SearchServerURI =~ ^http://([^:]+):([0-9]+).* ]]; then
+    solr_host=${BASH_REMATCH[1]} 
+    solr_port=${BASH_REMATCH[2]}
+    wait-for-it $solr_host:$solr_port --timeout=0 --strict -- echo "Solr server @ $solr_host:$solr_port is UP"
+  fi
+fi
+
+# Be sure that permission of configured var are correct
+if [[ -n $EZINI_site__FileSettings__VarDir ]]; then
+  echo "[info] Setting owner www-data in ${EZINI_site__FileSettings__VarDir}"
+  chown www-data $EZINI_site__FileSettings__VarDir
+fi
+
 ## Clear container on start by default
 if [ "$NO_FORCE_CONTAINER_REFRESH" != "" ]; then
-    echo "[info] NO_FORCE_SF_CONTAINER_REFRESH set, skipping container clearing on startup."
+    echo "[info] NO_FORCE_CONTAINER_REFRESH set, skipping container clearing on startup."
 else
-    echo "[info] NO_FORCE_SF_CONTAINER_REFRESH is not set, clearing container..."
+    echo "[info] NO_FORCE_CONTAINER_REFRESH is not set, clearing container..."
     # get a list of possible VarDir from ini settings
     varDirs=$(egrep '^VarDir=' ${EZ_ROOT}/settings/* -R | cut -d'=' -f2 | sort| uniq)
     for varDir in $varDirs; do
@@ -117,16 +138,23 @@ done
 # very bad way to export logs... probably we need to fix it in ezpublish
 # kernel
 for logfile in cluster_error debug error ocfoshttpcache storage warning mugo_varnish_purges; do
-  # a link doesn't do the trick, because php-fpm does not under root user
+  # a link doesn't do the trick, because php-fpm does not run under root user
   #  ln -sf /dev/stdout /var/www/html/var/log/${logfile}.log
-  [[ ! -f $logfile ]] && \
-    touch /var/www/html/var/log/${logfile}.log && \
-    chown www-data /var/www/html/var/log/${logfile}.log 
-  tail -F --pid $$ /var/www/html/var/log/${logfile}.log &
+  if [[ ! -f $logfile ]]; then
+    touch ${EZ_ROOT}/var/log/${logfile}.log && \
+    chown www-data {$EZ_ROOT}/var/log/${logfile}.log
+  fi
+  
+  # send to background
+  tail -F --pid $$ ${EZ_ROOT}/var/log/${logfile}.log &
+  
 done
 
 if [[ -n $CONSUL_PREFIX ]]; then
-  consul watch -type=keyprefix -prefix=${CONSUL_PREFIX} /scripts/consul2files.sh ${CONSUL_PREFIX} /var/www/html/settings 
+  wait-for-it ${CONSUL_HTTP_ADDR:-consul:8500} --timeout=300 -- consul watch \
+	-type=keyprefix \
+	-prefix=${CONSUL_PREFIX} \
+	/scripts/consul2files.sh ${CONSUL_PREFIX} /var/www/html/settings 
 fi
 
 exec "$@"
