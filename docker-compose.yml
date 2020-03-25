@@ -70,7 +70,7 @@ services:
       - './sql:/docker-entrypoint-initdb.d'
       - 'pgdata:/var/lib/postgresql/data'
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ez"]
+      test: ["CMD-SHELL", "pg_isready --user ez --dbname ezpublish"]
       interval: 10s
       timeout: 5s
       retries: 5

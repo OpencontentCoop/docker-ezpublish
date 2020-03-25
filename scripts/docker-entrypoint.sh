@@ -49,6 +49,8 @@ fi
 # Be sure that permission of configured var are correct
 if [[ -n $EZINI_site__FileSettings__VarDir ]]; then
   echo "[info] Setting owner www-data in ${EZINI_site__FileSettings__VarDir}"
+  [[ ! -d $EZINI_site__FileSettings__VarDir ]] && \
+	mkdir -p $EZINI_site__FileSettings__VarDir
   chown www-data $EZINI_site__FileSettings__VarDir
 fi
 
@@ -142,7 +144,7 @@ for logfile in cluster_error debug error ocfoshttpcache storage warning mugo_var
   #  ln -sf /dev/stdout /var/www/html/var/log/${logfile}.log
   if [[ ! -f $logfile ]]; then
     touch ${EZ_ROOT}/var/log/${logfile}.log && \
-    chown www-data {$EZ_ROOT}/var/log/${logfile}.log
+    chown www-data ${EZ_ROOT}/var/log/${logfile}.log
   fi
   
   # send to background
