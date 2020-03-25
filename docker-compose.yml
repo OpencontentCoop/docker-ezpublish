@@ -9,6 +9,23 @@ services:
       - solr
     environment:
       EZ_ROOT: /var/www/html
+      EZINI_file__eZDFSClusteringSettings__DBHost: postgres
+      EZINI_file__eZDFSClusteringSettings__DBPort: 5432
+      EZINI_file__eZDFSClusteringSettings__DBUser: ez
+      EZINI_file__eZDFSClusteringSettings__DBPassword: verygoodsecret
+      EZINI_file__eZDFSClusteringSettings__DBName: ezpublish
+      EZINI_file__eZDFSClusteringSettings__MountPointPath: '/mnt/efs/cluster-openpa'
+      EZINI_solr__SolrBase__SearchServerURI: 'http://solr:8983/solr/prototipo'
+      EZINI_site__DatabaseSettings__Server: postgres
+      EZINI_site__DatabaseSettings__Port: 5432
+      EZINI_site__DatabaseSettings__User: ez 
+      EZINI_site__DatabaseSettings__Password: verygoodsecret
+      EZINI_site__DatabaseSettings__Database: ezpublish
+      EZINI_site__FileSettings__VarDir: var/prototipo
+      EZINI_site__SiteSettings__SiteName: "Prototipo"
+      # the url is used only in email to make valid links
+      EZINI_site__SiteSettings__SiteURL: "ezpublish.localtest.me"
+
 
   nginx:
     image: registry.gitlab.com/opencontent/ezpublish/nginx
@@ -47,13 +64,13 @@ services:
       traefik.enable: false
     environment:
       POSTGRES_DB: ezpublish
-      POSTGRES_USER: postgres
+      POSTGRES_USER: ez
       POSTGRES_PASSWORD: verygoodsecret
     volumes:
       - './sql:/docker-entrypoint-initdb.d'
       - 'pgdata:/var/lib/postgresql/data'
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U ez"]
       interval: 10s
       timeout: 5s
       retries: 5
