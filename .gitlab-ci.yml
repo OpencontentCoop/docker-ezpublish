@@ -6,6 +6,7 @@ stages:
   - push
 
 variables:
+    DOCKER_BUILDKIT: 1
     PHP_IMAGE: "${CI_REGISTRY_IMAGE}/php"
     PHP_TMP_IMAGE: "${CI_REGISTRY_IMAGE}/php:${CI_COMMIT_SHORT_SHA}"
     NGINX_IMAGE: "${CI_REGISTRY_IMAGE}/nginx"
@@ -21,8 +22,9 @@ before_script:
 tmp_build_php:
     stage: build
     script:
-        - docker pull  $PHP_TMP_IMAGE || docker build --pull -t $PHP_TMP_IMAGE . 
-        - docker push  $PHP_TMP_IMAGE
+        - docker pull $PHP_IMAGE:latest || true
+        - docker pull $PHP_TMP_IMAGE || docker build --pull -t $PHP_TMP_IMAGE . 
+        - docker push $PHP_TMP_IMAGE
     only:
       - branches
       - tags
@@ -30,8 +32,9 @@ tmp_build_php:
 tmp_build_nginx:
     stage: build_nginx
     script:
-        - docker pull  $NGINX_TMP_IMAGE || docker build --pull --build-arg php_image=$PHP_TMP_IMAGE -t $NGINX_TMP_IMAGE -f Dockerfile.nginx . 
-        - docker push  $NGINX_TMP_IMAGE
+        - docker pull $NGINX_TMP_IMAGE:latest || true
+        - docker pull $NGINX_TMP_IMAGE || docker build --pull --build-arg php_image=$PHP_TMP_IMAGE -t $NGINX_TMP_IMAGE -f Dockerfile.nginx . 
+        - docker push $NGINX_TMP_IMAGE
     only:
       - branches
       - tags
