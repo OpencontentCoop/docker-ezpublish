@@ -130,7 +130,7 @@ RUN echo "Running composer"  \
 	&& rm -rf /root/.composer 
 	
 # Add consul client to allow configuration using consul KV store
-COPY --from=consul:1.6 /bin/consul /bin/consul
+COPY --from=consul:1.7 /bin/consul /bin/consul
 
 # Add wait-for-it utility to check services readiness
 RUN curl https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh > /bin/wait-for-it && \
