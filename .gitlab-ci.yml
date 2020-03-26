@@ -72,8 +72,8 @@ push_nginx_branches:
     stage: push
     script:
         - docker pull  $NGINX_TMP_IMAGE
-        - docker tag   $NGINX_TMP_IMAGE "$NGINX_IMAGE:$CI_COMMIT_REF_NAME" 
-        - docker push "$NGINX_IMAGE:$CI_COMMIT_REF_NAME"
+        - docker tag   $NGINX_TMP_IMAGE "$NGINX_IMAGE:${CI_COMMIT_REF_NAME/\//-}" 
+        - docker push "$NGINX_IMAGE:${CI_COMMIT_REF_NAME/\//-}"
     only:
         - branches
     except:
