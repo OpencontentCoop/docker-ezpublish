@@ -46,13 +46,6 @@ if [[ -n $EZINI_solr__SolrBase__SearchServerURI ]]; then
   fi
 fi
 
-# Be sure that permission of configured var are correct
-if [[ -n $EZINI_site__FileSettings__VarDir ]]; then
-  echo "[info] Setting owner www-data in ${EZINI_site__FileSettings__VarDir}"
-  [[ ! -d $EZINI_site__FileSettings__VarDir ]] && \
-	mkdir -p $EZINI_site__FileSettings__VarDir
-  chown www-data $EZINI_site__FileSettings__VarDir
-fi
 
 ## Clear container on start by default
 if [ "$NO_FORCE_CONTAINER_REFRESH" != "" ]; then
@@ -63,11 +56,10 @@ else
     varDirs=$(egrep '^VarDir=' ${EZ_ROOT}/settings/* -R | cut -d'=' -f2 | sort| uniq)
     for varDir in $varDirs; do
         if [[ -d ${EZ_ROOT}/${varDir} ]]; then
-            echo "[info] cleaning VarDir '${EZ_ROOT}/${varDir}/cache' ..."
+            echo "[info] cleaning VarDir '${EZ_ROOT}/${varDir}' ..."
             chown www-data ${EZ_ROOT}/${varDir} -R
-            #[[ -d ${EZ_ROOT}/${varDir}/cache ]] && rm -rf ${EZ_ROOT}/${varDir}/cache/*
         else
-            echo "[info] no VarDir found"
+            echo "[warn] no VarDir found"
         fi
     done
 
@@ -87,6 +79,20 @@ else
             echo "[info] no VarDir found"
         fi
     done
+    
+    # Be sure that permission of configured var are correct
+    if [[ -n $EZINI_site__FileSettings__VarDir ]]; then
+      echo "[info] Setting owner www-data in ${EZINI_site__FileSettings__VarDir}"
+      [[ ! -d $EZINI_site__FileSettings__VarDir ]] && \
+    	mkdir -p $EZINI_site__FileSettings__VarDir
+        chown www-data $EZINI_site__FileSettings__VarDir
+    fi
+
+    # look for remaining files owned by root
+    if [[ -d var ]]; then 
+	echo "[info] looking for residual files owned by root"
+	find var -user root -exec chown www-data {} \;
+    fi
 
 fi
 
